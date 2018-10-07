@@ -7,6 +7,17 @@
 # Length::Centimeter
 # Length::Meter
 
+# http://ruby.sketchup.com/Sketchup/AppObserver.html
+class MyAppObserver < Sketchup::AppObserver
+  def onNewModel(model)
+    AddModelObservers(model)
+  end
+  
+  def onOpenModel(model)
+    AddModelObservers(model)
+  end
+end
+
 # http://ruby.sketchup.com/Sketchup/SelectionObserver.html
 class MySelectionObserver < Sketchup::SelectionObserver
   def onSelectionBulkChange(selection)
@@ -34,5 +45,10 @@ class MyToolsObserver < Sketchup::ToolsObserver
   end
 end
 
-Sketchup.active_model.selection.add_observer(MySelectionObserver.new)
-Sketchup.active_model.tools.add_observer(MyToolsObserver.new)
+def AddModelObservers(model)
+  model.selection.add_observer(MySelectionObserver.new)
+  model.tools.add_observer(MyToolsObserver.new)
+end
+
+Sketchup.add_observer(MyAppObserver.new)
+AddModelObservers(Sketchup.active_model)
